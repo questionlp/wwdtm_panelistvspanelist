@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wait Wait... Don't Tell Me! Panelist vs Panelist Report</title>
+    <!-- Import Pure CSS Base -->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+
+    <!-- Import Custom CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    {% if app_environment.startswith("prod") %}
+    <!-- Google Analytics -->
+    <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', '{{ ga_property_code }}', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <!-- End Google Analytics -->
+    {% endif %}
+</head>
+<body>
+    <div class="body">
+        <!-- Start Side Navigation -->
+        <div id="menu">
+            <div class="pure-menu menu-customized">
+                <span class="pure-menu-heading">Site</span>
+                <ul class="pure-menu-list">
+                    <li class="pure-menu-item"><a href="/" class="pure-menu-link">Stats Page</a></li>
+                </ul>
+
+                <span class="pure-menu-heading">Panelists</span>
+                <ul class="pure-menu-list">
+                {% for panelist, vs_panelists in results.items() %}
+                    <li class="pure-menu-item"><a href="#{{ slugify.slugify(panelist) }}" class="pure-menu-link">{{ panelist }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <!-- End Side Navigation -->
+
+        <!-- Start Content -->
+        <div id="content">
+            <!-- Start Header -->
+            <div id="header">
+                <h1>Wait Wait Panelist vs Panelist Report</h1>
+                <h2>Report detailing how well a panelist has performed against other panelists</h2>
+            </div>
+            <!-- End Header -->
+
+            <div id="results">
+                {% for panelist, vs_panelists in results.items() %}
+                <section class="panelist" id="{{ slugify.slugify(panelist) }}">
+                    <table class="pure-table pure-table-bordered">
+                        <colgroup>
+                            <col class="tc1">
+                            <col class="tc2">
+                            <col class="tc3">
+                            <col class="tc4">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="pnlname"><h3>{{ panelist }}</h3></th>
+                            </tr>
+                            <tr>
+                                <th class="tc1">Ranked vs</th>
+                                <th class="tc2">Higher</th>
+                                <th class="tc3">Tied</th>
+                                <th class="tc4">Lower</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for vs_panelist, result in vs_panelists.items() %}
+                            {% if (result["wins"], result["draws"], result["losses"]) != (0, 0, 0) %}
+                            <tr>
+                                <td>{{ vs_panelist }}</td>
+                                <td>{{ result["wins"] }}</td>
+                                <td>{{ result["draws"] }}</td>
+                                <td>{{ result["losses"] }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </section>
+                {% endfor %}
+            </div>
+
+            <!-- Start Footer -->
+            <div id="footer">
+                    <div id="timestamp">Page last generated on {{ rendered_at }}.</div>
+                    <div id="copyright">Copyright &copy; 2019 <a href="http://linhpham.org/">Linh Pham</a>. All rights reserved.</div>
+            </div>
+            <!-- End Footer -->
+        </div>
+        <!-- End Content -->
+    </div>
+</body>
+</html>
