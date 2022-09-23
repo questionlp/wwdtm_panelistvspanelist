@@ -9,7 +9,7 @@ mccabe==0.6.1
 more-itertools==4.3.0
 mysql-connector-python==8.0.13
 pluggy==0.8.0
-protobuf==3.6.1
+protobuf==3.18.3
 python-dateutil==2.7.5
 python-slugify==2.0.0
 pytz==2019.1
